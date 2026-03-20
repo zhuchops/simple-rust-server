@@ -8,6 +8,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        host: [HOST_POLAND, HOST_FINLAND]
     steps:
       - uses: actions/checkout@v6
 
@@ -20,7 +23,7 @@ jobs:
       - name: Copy build to Server
         uses: appleboy/scp-action@v1
         with:
-          host: ${{ secrets.HOST }}
+          host: ${{ secrets[matrix.host] }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           source: target/release/simple-server
@@ -29,7 +32,7 @@ jobs:
       - name: Restart service
         uses: appleboy/ssh-action@v1
         with:
-          host: ${{ secrets.HOST }}
+          host: ${{ secrets[matrix.host] }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
