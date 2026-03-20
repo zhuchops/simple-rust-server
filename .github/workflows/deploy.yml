@@ -32,4 +32,6 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
-          script: sudo systemctl restart simple-rust-server
+          script: |
+            chmod +x /home/deploy/target/release/simple-server
+            sudo systemctl restart simple-rust-server
