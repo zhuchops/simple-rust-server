@@ -32,4 +32,4 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
-          script: systemctl restart simple-server
+          script: sudo systemctl restart simple-server
