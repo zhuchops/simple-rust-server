@@ -10,14 +10,22 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Deploy to Server
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Copy build to Server
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: target/release/simple-server
+          target: /home/deploy/
+
+      - name: Restart service
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
-          script: |
-            cd /home/deploy/ping-server
-            git pull origin main
-            cargo build --release
-            systemctl restart ping-server
+          script: systemctl restart simple-server
